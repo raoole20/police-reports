@@ -1,5 +1,6 @@
+import NavLayout from "@/components/custom/dashboard/nav-layout";
 import { AppSidebar } from "@/components/shared/app-sidebar";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 export default function DashboardLayout({
   children,
@@ -9,9 +10,9 @@ export default function DashboardLayout({
   return (
     <SidebarProvider>
       <AppSidebar />
-      <main className="flex ">
-        <SidebarTrigger />
-        {children}
+      <main className="w-full block space-y-5">
+        <NavLayout />
+        <div className="px-5">{children}</div>
       </main>
     </SidebarProvider>
   );
