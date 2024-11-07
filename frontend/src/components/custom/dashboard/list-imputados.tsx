@@ -4,7 +4,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 
 export default function ListImputados() {
   return (
-    <Card className="col-span-4">
+    <Card className="">
       <CardHeader>
         <CardTitle>Lista de Inputados</CardTitle>
         <CardDescription>Deploy your new project in one-click.</CardDescription>

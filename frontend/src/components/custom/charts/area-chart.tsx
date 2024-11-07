@@ -39,7 +39,7 @@ const chartConfig = {
 
 export function AreaChartComponent() {
   return (
-    <Card className="col-span-6">
+    <Card className="">
       <CardHeader>
         <CardTitle>Area Chart - Stacked</CardTitle>
         <CardDescription>

@@ -4,7 +4,7 @@ import React from 'react'
 
 export default function page() {
   return (
-    <div className='grid md:grid-cols-2 lg:grid-cols-12 gap-5 lg:grid-rows-12'>
+    <div className='grid md:grid-cols-2 lg:grid-cols-2 gap-5'>
       <ListImputados />
       <AreaChartComponent />
     </div>
