@@ -40,9 +40,9 @@ export default function Login() {
   return (
     <div className="w-11/12 m-auto md:w-1/2 lg:max-w-[500px]">
       <Card className="">
-        <CardHeader>
-          <CardTitle>Login</CardTitle>
-          <CardDescription>Login paco</CardDescription>
+        <CardHeader className="text-center">
+          <CardTitle>Police SQL</CardTitle>
+          <CardDescription>Inicio de sesion</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -52,12 +52,11 @@ export default function Login() {
                 name="username"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Username</FormLabel>
+                    <FormLabel>ID</FormLabel>
                     <FormControl>
                       <Input placeholder="shadcn" {...field} />
                     </FormControl>
                     <FormDescription>
-                      This is your public display name.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -69,18 +68,17 @@ export default function Login() {
                 name="password" 
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>Contraseña</FormLabel>
                     <FormControl>
                       <Input type="password" placeholder="Password" {...field} />
                     </FormControl>
                     <FormDescription>
-                      This is your private password.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
                 />
-              <Button type="submit" className="w-full">Submit</Button>
+              <Button type="submit" className="w-full">Iniciar Sesion</Button>
             </form>
           </Form>
         </CardContent>

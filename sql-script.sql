@@ -1,0 +1,25 @@
+CREATE TABLE Cops (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL,
+    lastname VARCHAR(100) NOT NULL,
+    `rank` ENUM('CADET', 'OFFICER') NOT NULL DEFAULT 'CADET',
+    policeID CHAR(36) UNIQUE DEFAULT (UUID()),
+    password VARCHAR(225)
+);
+
+CREATE TABLE Felon (
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	cedula INT  UNIQUE NOT NULL CKECK (cedula >= 0),
+	name varchar(225) NOT NULL,
+	lastname VARCHAR(225) NOT NULL
+)
+
+CREATE TABLE Crimes ()
+
+CREATE TABLE Charges ()
+
+CREATE TABLE Reports ()
+
+CREATE TABLE Evidence ()
+
+CREATE TABLE Testimony ()

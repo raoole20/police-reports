@@ -21,17 +21,19 @@ activar el entorno virtual con visual studio
 ```
 cd backend
 .\venv\Script\activate
-python manage.py makemigrations
-python manage.py migrate
-python manage.py runserver
+python .\src\app.py
+```
+o usando docker
+```
+    docker-compose up 
 ```
 
 ### Frontend
 ```
-cd front 
+cd frontend    
+npm i
 npm run dev
 ```
-
 
 ## TODO List
 * [ ] Login
@@ -49,7 +51,6 @@ npm run dev
 * [ ] Arrestos
     * [ ] delitos
     * [ ] policias que hicieron el arresto
-
 
 # Biografia
 * [que es la reseña policial](https://criminalisticabasic.blogspot.com/2016/03/la-resena-policial-de-undetenido-es.html)
