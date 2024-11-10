@@ -24,20 +24,22 @@ CREATE TABLE Ciudadanos (
 
 CREATE TABLE Contactos (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    id_ciudadano INT FOREIGN KEY REFERENCES Ciudadanos(id),
+    id_ciudadano INT NOT NULL,
     tipo ENUM('TELEFONO', 'CORREO') NOT NULL,
     dato VARCHAR(225) NOT NULL,
-)
+    FOREIGN KEY (id_ciudadano) REFERENCES Ciudadanos(id)
+);
 
 CREATE TABLE Direcciones (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    id_ciudadano INT FOREIGN KEY REFERENCES Ciudadanos(id),
+    id_ciudadano INT,
     descripcion VARCHAR(225) NOT NULL,
-    pais VARCHAR(100) not null,
-    estado VARCHAR(100) not null,
-    ciudad VARCHAR(100) not null,
-    codigo_postal INT not null CHECK (codigo_postal >= 0),
-    numero_casa VARCHAR(50) not null CHECK 
+    pais VARCHAR(100) NOT NULL,
+    estado VARCHAR(100) NOT NULL,
+    ciudad VARCHAR(100) NOT NULL,
+    codigo_postal INT NOT NULL CHECK (codigo_postal >= 0),
+    numero_casa VARCHAR(50) NOT NULL,
+    FOREIGN KEY (id_ciudadano) REFERENCES Ciudadanos(id)
 );
 
 CREATE TABLE Delitos (
