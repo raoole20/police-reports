@@ -50,7 +50,10 @@ npm run dev
     * [ ] crud de cargos
 * [ ] Arrestos
     * [ ] delitos
-    * [ ] policias que hicieron el arresto
+    * [ ] policias que hicieron el arrestos
 
 # Biografia
 * [que es la reseña policial](https://criminalisticabasic.blogspot.com/2016/03/la-resena-policial-de-undetenido-es.html)
+
+
+System.out.println("mensaje de un lolero,pistolero que escucha ranmstein, esclaviza orcos, de derechas)
