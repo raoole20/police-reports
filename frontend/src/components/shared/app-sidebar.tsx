@@ -1,4 +1,9 @@
-import { Calendar, Home, Inbox, Plus, Search, Settings } from "lucide-react";
+import {
+  FileText,
+  Home,
+  Plus,
+  Siren,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -16,28 +21,18 @@ import {
 const items = [
   {
     title: "dashboard",
-    url: "#",
+    url: "/dashboard/overview",
     icon: Home,
   },
   {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
+    title: "Policias",
+    url: "/dashboard/policias",
+    icon: Siren,
   },
   {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
+    title: "Crear Resenn",
+    url: "/dashboard/crear-resena",
+    icon: FileText,
   },
 ];
 

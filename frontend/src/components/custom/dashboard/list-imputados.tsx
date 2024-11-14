@@ -1,16 +1,16 @@
 import React from "react";
-import { TableDemo } from "@/components/shared/table";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { ImputadosTable } from "@/components/shared/table";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
+import { PersonsMocks } from "@/mocks/persons-mocks";
 
 export default function ListImputados() {
   return (
     <Card className="">
       <CardHeader>
         <CardTitle>Lista de Inputados</CardTitle>
-        <CardDescription>Deploy your new project in one-click.</CardDescription>
       </CardHeader>
       <CardContent>
-        <TableDemo />
+        <ImputadosTable data={PersonsMocks}/>
       </CardContent>
       <CardFooter></CardFooter>
     </Card>
