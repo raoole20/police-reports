@@ -1,59 +1,55 @@
-import { Calendar, Home, Inbox, Plus, Search, Settings } from "lucide-react";
+import {
+  Home,
+  Siren,
+  UserRound,
+} from "lucide-react";
 
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
-  SidebarGroupAction,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { Button } from "../ui/button";
+import Link from "next/link";
 
 // Menu items.
 const items = [
   {
     title: "dashboard",
-    url: "#",
+    url: "/dashboard/overview",
     icon: Home,
   },
   {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
+    title: "Policias",
+    url: "/dashboard/policias",
+    icon: Siren,
   },
   {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
+    title: "Personas",
+    url: "/dashboard/personas",
+    icon: UserRound,
+  }
 ];
 
 export function AppSidebar() {
   return (
     <Sidebar>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
-          <SidebarGroupAction>
-            <Plus /> <span className="sr-only">Add Project</span>
-          </SidebarGroupAction>
-          <SidebarGroupContent></SidebarGroupContent>
+        <SidebarGroup className="space-y-2">
+          <SidebarGroupLabel>Police SQL</SidebarGroupLabel>
+          <Button className="bg-primary">
+            <Link href={'/dashboard/report/new'}>
+              Crear Reporte
+            </Link>
+          </Button>          
         </SidebarGroup>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel>Rutas</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (

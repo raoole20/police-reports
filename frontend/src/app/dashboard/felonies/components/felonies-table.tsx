@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -12,20 +12,21 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
-import { MoreHorizontal, Printer } from "lucide-react"
+} from "@tanstack/react-table";
+import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -33,11 +34,49 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Person } from "@/types/persons.types"
+} from "@/components/ui/table";
 
+const data: Felony[] = [
+  {
+    id: "f1",
+    description: "Robbery",
+    status: "pending",
+    email: "offender1@example.com",
+  },
+  {
+    id: "f2",
+    description: "Assault",
+    status: "processing",
+    email: "offender2@example.com",
+  },
+  {
+    id: "f3",
+    description: "Fraud",
+    status: "success",
+    email: "offender3@example.com",
+  },
+  {
+    id: "f4",
+    description: "Burglary",
+    status: "failed",
+    email: "offender4@example.com",
+  },
+  {
+    id: "f5",
+    description: "Arson",
+    status: "success",
+    email: "offender5@example.com",
+  },
+];
 
-export const columns: ColumnDef<Person>[] = [
+export type Felony = {
+  id: string;
+  description: string;
+  status: "pending" | "processing" | "success" | "failed";
+  email: string;
+};
+
+export const columns: ColumnDef<Felony>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -61,67 +100,75 @@ export const columns: ColumnDef<Person>[] = [
     enableHiding: false,
   },
   {
-    accessorFn: (person) => person.id,
-    header: "ID",
-    accessorKey: "id",
-    cell: ({ row }) => row.original.id,
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => (
+      <div className="capitalize">{row.getValue("status")}</div>
+    ),
   },
   {
-    accessorFn: (person) => person.cedula,
-    header: "Cedula",
-    accessorKey: "cedula",
-    cell: ({ row }) => row.original.cedula,
+    accessorKey: "email",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Email
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
   },
   {
-    accessorFn: (person) => person.nombre,
-    header: "Nombre",
-    accessorKey: "nombre",
-    cell: ({ row }) => row.original.nombre,
-  },
-  {
-    accessorFn: (person) => person.apellido,
-    header: "Apellido",
-    accessorKey: "apellido",
-    cell: ({ row }) => row.original.apellido,
+    accessorKey: "description",
+    header: () => <div className="text-right">Description</div>,
+    cell: ({ row }) => (
+      <div className="text-right font-medium">
+        {row.getValue("description")}
+      </div>
+    ),
   },
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original
+      const felony = row.original;
 
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Abrir menu</span>
+              <span className="sr-only">Open menu</span>
               <MoreHorizontal />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.cedula)}
+              onClick={() => navigator.clipboard.writeText(felony.id)}
             >
-              Copiar ID
+              Copy felony ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Ver</DropdownMenuItem>
+            <DropdownMenuItem>View offender</DropdownMenuItem>
+            <DropdownMenuItem>View felony details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      )
+      );
     },
   },
-]
+];
 
-export function ImputadosTable({ data }: { data: Person[] }) {
-  const [sorting, setSorting] = React.useState<SortingState>([])
+export function FeloniesTable() {
+  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
-  )
+  );
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
+    React.useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
     data,
@@ -140,27 +187,45 @@ export function ImputadosTable({ data }: { data: Person[] }) {
       columnVisibility,
       rowSelection,
     },
-  })
+  });
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4 justify-between">
+      <div className="flex items-center py-4">
         <Input
-          placeholder="Filtrar Por cedula o ID..."
-          value={(table.getColumn("cedula")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter emails..."
+          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("cedula")?.setFilterValue(event.target.value)
+            table.getColumn("email")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
-        <div className="gap-2 flex items-center">
-          <Button variant={'outline'} size={'icon'}>
-            <Printer/>
-          </Button>
-          <Button variant={'outline'} className="bg-primary">
-            Crear Imputados
-          </Button>
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="ml-auto">
+              Columns <ChevronDown />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table
+              .getAllColumns()
+              .filter((column) => column.getCanHide())
+              .map((column) => {
+                return (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) =>
+                      column.toggleVisibility(!!value)
+                    }
+                  >
+                    {column.id}
+                  </DropdownMenuCheckboxItem>
+                );
+              })}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       <div className="rounded-md border">
         <Table>
@@ -177,7 +242,7 @@ export function ImputadosTable({ data }: { data: Person[] }) {
                             header.getContext()
                           )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -237,5 +302,5 @@ export function ImputadosTable({ data }: { data: Person[] }) {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -1,6 +1,11 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Form } from "@/components/ui/form";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { FeloniesTable } from "./components/felonies-table";
 
 interface Crime {
   name: string;
@@ -9,9 +14,10 @@ interface Crime {
 }
 
 const CrimeManagement = () => {
-  const [crimeName, setCrimeName] = useState('');
-  const [crimeCategory, setCrimeCategory] = useState('');
-  const [crimeDescription, setCrimeDescription] = useState('');
+  const form = useForm({})
+  const [crimeName, setCrimeName] = useState("");
+  const [crimeCategory, setCrimeCategory] = useState("");
+  const [crimeDescription, setCrimeDescription] = useState("");
   const [crimes, setCrimes] = useState<Crime[]>([]);
   const [editIndex, setEditIndex] = useState<number | null>(null);
 
@@ -30,9 +36,9 @@ const CrimeManagement = () => {
     } else {
       setCrimes([...crimes, newCrime]);
     }
-    setCrimeName('');
-    setCrimeCategory('');
-    setCrimeDescription('');
+    setCrimeName("");
+    setCrimeCategory("");
+    setCrimeDescription("");
   };
 
   const handleDelete = (index: number) => {
@@ -50,52 +56,56 @@ const CrimeManagement = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Delito"
-          className="bg-slate-700 rounded-md p-2 mb-2 block placeholder-color"
-          value={crimeName}
-          onChange={(e) => setCrimeName(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="Cargos"
-          className="bg-slate-700 rounded-md p-2 mb-2 block placeholder-color"
-          value={crimeCategory}
-          onChange={(e) => setCrimeCategory(e.target.value)}
-        />
-        <textarea
-          placeholder="Descripcion"
-          className="bg-slate-700 rounded-md p-2 mb-2 block placeholder-color"
-          value={crimeDescription}
-          onChange={(e) => setCrimeDescription(e.target.value)}
-        />
-        <button type="submit">Submit</button>
-      </form>
+    <Card>
+      <CardHeader>
+        <CardTitle>Crear Delitos</CardTitle>
+      </CardHeader>
+      <Form {...form}>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Delito"
+            className="bg-slate-700 rounded-md p-2 mb-2 block placeholder-color"
+            value={crimeName}
+            onChange={(e) => setCrimeName(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="Cargos"
+            className="bg-slate-700 rounded-md p-2 mb-2 block placeholder-color"
+            value={crimeCategory}
+            onChange={(e) => setCrimeCategory(e.target.value)}
+          />
+          <textarea
+            placeholder="Descripcion"
+            className="bg-slate-700 rounded-md p-2 mb-2 block placeholder-color"
+            value={crimeDescription}
+            onChange={(e) => setCrimeDescription(e.target.value)}
+          />
+          <Button type="submit">Submit</Button>
+        </form>
+      </Form>
+
       <ul>
         {crimes.map((crime, index) => (
           <li key={index}>
             <strong>Delito:</strong> {crime.name} <br />
             <strong>Cargos:</strong> {crime.category} <br />
-            <strong>Descripcion:</strong> {crime.description} <br /><br />
+            <strong>Descripcion:</strong> {crime.description} <br />
+            <br />
             <button onClick={() => handleDelete(index)}>Eliminar</button>
             <button onClick={() => handleEdit(index)}>Editar</button>
           </li>
         ))}
       </ul>
-    </div>
+    </Card>
   );
 };
 
 export default function Page() {
   return (
     <div>
-      <h1>Gestor de delitos</h1>
-      <CrimeManagement />
+      <FeloniesTable />
     </div>
   );
 }
-
-
