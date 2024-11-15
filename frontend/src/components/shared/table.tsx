@@ -13,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { MoreHorizontal } from "lucide-react"
+import { MoreHorizontal, Printer } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -144,7 +144,7 @@ export function ImputadosTable({ data }: { data: Person[] }) {
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+      <div className="flex items-center py-4 justify-between">
         <Input
           placeholder="Filtrar Por cedula o ID..."
           value={(table.getColumn("cedula")?.getFilterValue() as string) ?? ""}
@@ -153,6 +153,14 @@ export function ImputadosTable({ data }: { data: Person[] }) {
           }
           className="max-w-sm"
         />
+        <div className="gap-2 flex items-center">
+          <Button variant={'outline'} size={'icon'}>
+            <Printer/>
+          </Button>
+          <Button variant={'outline'} className="bg-primary">
+            Crear Imputados
+          </Button>
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>

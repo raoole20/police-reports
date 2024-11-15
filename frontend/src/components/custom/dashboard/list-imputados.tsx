@@ -7,7 +7,7 @@ export default function ListImputados() {
   return (
     <Card className="">
       <CardHeader>
-        <CardTitle>Lista de Inputados</CardTitle>
+        <CardTitle>Lista de Imputados</CardTitle>
       </CardHeader>
       <CardContent>
         <ImputadosTable data={PersonsMocks}/>
