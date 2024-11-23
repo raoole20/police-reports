@@ -1,9 +1,11 @@
 from flask import Blueprint, current_app, jsonify, request
+from flask_jwt_extended import create_access_token
 from utils.index import decrypt
+
+import json
 
 auth_routes = Blueprint("auth_routes", __name__)
 
-# TODO debe retornar un JWT
 @auth_routes.route("/login", methods=["POST"]) 
 def login():
     datos = request.get_json()
@@ -12,7 +14,8 @@ def login():
 
     query = """SELECT 
                     p.id_policia,
-                    p.contrasena
+                    p.contrasena,
+                    p.rango
                 FROM policias p 
                     WHERE p.id_policia = '{}'""".format(policia_id)
 
@@ -27,9 +30,24 @@ def login():
             current_app.config["ENCRYPT_PASSWORD"], encrypted_password
         )
         decryptPass = decryptPass.decode()
-
+        
+        print(police)
         if contrasena == decryptPass:
-            return "Login exitoso"
+            id = police[0]
+            rango = police[-1]
+
+            access_token = create_access_token(identity=json.dumps({"id": id, "rango": rango}))
+            response = {
+                "error": False,
+                "message": "Inicio de sesión exitoso",
+                "data": {
+                    "access_token": access_token
+                }
+            }
+            return jsonify(response)
         else: 
-            return "Contraseña incorrecta", 404
+            return {
+                "error": True,
+                "message": "Contraseña incorrecta"
+            }, 400
     return "policia_id no encontrado", 404

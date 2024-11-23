@@ -1,9 +1,13 @@
 from flask import Flask
+from flask_jwt_extended import JWTManager
 from config import config
 from controller import example_routes, cops_router, auth_routes
 from flask_mysqldb import MySQL
 
 app = Flask(__name__)
+app.config['JWT_SECRET_KEY'] = 'your_jwt_secret_key'  # Cambia esto por una clave secreta segura
+jwt = JWTManager(app)
+
 conexion = MySQL(app)
 
 # Almacenar la conexión en la variable app
@@ -12,8 +16,6 @@ app.config['ENCRYPT_PASSWORD'] = b"secret_AES_key_string_to_encrypt/decrypt_with
 
 @app.route('/')
 def index():
-    cursor = conexion.connection.cursor()
-    cursor.execute('SELECT * FROM usuarios')
     return "Hello, World!"
 
 if __name__ == '__main__':
