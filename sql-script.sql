@@ -22,10 +22,13 @@ CREATE TABLE IF NOT EXISTS `cops_sql`.`policias` (
   `nombre` VARCHAR(100) NOT NULL,
   `apellido` VARCHAR(100) NULL,
   `rango` ENUM('CADETE', 'OFICIAL') NULL DEFAULT 'CADETE',
-  `id-policia` CHAR(36) NULL DEFAULT 'UUID()',
-  `contrasenna` VARCHAR(255) NULL,
+  `id_policia` VARCHAR(225) NOT NULL,
+  `contrasena` VARCHAR(255) NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
+
+
+SELECT UUID() AS UUID_VALUE;
 
 CREATE UNIQUE INDEX `id-policia_UNIQUE` ON `cops_sql`.`policias` (`id-policia` ASC) VISIBLE;
 
