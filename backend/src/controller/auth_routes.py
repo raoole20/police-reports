@@ -1,5 +1,5 @@
 from flask import Blueprint, current_app, jsonify, request
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required
 from utils.index import decrypt
 
 import json
@@ -15,6 +15,8 @@ def login():
     query = """SELECT 
                     p.id_policia,
                     p.contrasena,
+                    p.nombre,
+                    p.apellido,
                     p.rango
                 FROM policias p 
                     WHERE p.id_policia = '{}'""".format(policia_id)
@@ -24,6 +26,7 @@ def login():
     cursor.execute(query)
     police = cursor.fetchone()
 
+    print(datos)
     if police is not None:
         encrypted_password = police[1]  # Assuming the password is the second field in the tuple
         decryptPass = decrypt(
@@ -31,17 +34,23 @@ def login():
         )
         decryptPass = decryptPass.decode()
         
-        print(police)
         if contrasena == decryptPass:
             id = police[0]
+            nombre = police[2]
+            apellido = police[3]
             rango = police[-1]
+            
 
             access_token = create_access_token(identity=json.dumps({"id": id, "rango": rango}))
             response = {
                 "error": False,
                 "message": "Inicio de sesión exitoso",
                 "data": {
-                    "access_token": access_token
+                    "access_token": access_token,
+                    "id": id,
+                    "rango": rango,
+                    "nombre": nombre,
+                    "apellido": apellido
                 }
             }
             return jsonify(response)
@@ -50,4 +59,8 @@ def login():
                 "error": True,
                 "message": "Contraseña incorrecta"
             }, 400
-    return "policia_id no encontrado", 404
+    return jsonify({
+        "error": True,
+        "message": "Usuario no encontrado",
+        "data": None
+    }), 404

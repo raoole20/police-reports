@@ -26,7 +26,7 @@ const items = [
   },
   {
     title: "Policias",
-    url: "/dashboard/policias",
+    url: "/dashboard/cops/",
     icon: Siren,
   },
   {

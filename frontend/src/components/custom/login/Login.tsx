@@ -14,27 +14,47 @@ import { Input } from "@/components/ui/input";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod"
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
+  policeID: z.string().min(2, {
+    message: "policeID must be at least 2 characters.",
   }),
-  password: z.string().min(8, {
-    message: "Password must be at least 8 characters.",
+  password: z.string().min(3, {
+    message: "Password must be at least 3 characters.",
   }),
 })
 
 export default function Login() {
+  const router = useRouter()
+  const [loading, setLoading] = React.useState(false)
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      policeID: "",
       password: "",
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setLoading(true)
+    const result = await signIn("credentials", {
+      policeID: values.policeID,
+      password: values.password,
+      redirect: false,
+    })
+
+    setLoading(false)
+    if(!result) 
+      return console.error("Failed to sign in")
+
+    if(result.error) {
+      console.error("Failed to sign in", result.error)
+    } else {
+      router.push('/dashboard')
+    }
   }
 
   return (
@@ -49,7 +69,7 @@ export default function Login() {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <FormField
                 control={form.control}
-                name="username"
+                name="policeID"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>ID</FormLabel>
@@ -78,7 +98,15 @@ export default function Login() {
                   </FormItem>
                 )}
                 />
-              <Button type="submit" className="w-full">Iniciar Sesion</Button>
+              <Button type="submit" className="w-full" disabled={loading}> 
+                {
+                loading ? (
+                    <Loader2 className="animate-spin" />
+                  ) : (
+                    'Iniciar Sesion'
+                  )
+                }
+              </Button>
             </form>
           </Form>
         </CardContent>

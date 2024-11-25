@@ -1,6 +1,9 @@
+'use client'
 import React from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { ModeToggle } from "@/components/shared/mode-toggle";
+import { Button } from "@/components/ui/button";
+import { signOut } from "next-auth/react";
 // import SearchBar from "@/components/shared/search-bar";
 
 export default function NavLayout() {
@@ -10,6 +13,7 @@ export default function NavLayout() {
       <div className="flex gap-5">
         {/* <SearchBar /> */}
         <ModeToggle />
+        <Button onClick={() => signOut()}>Logout</Button>
       </div>
     </div>
   );
