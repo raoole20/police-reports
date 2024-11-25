@@ -1,5 +1,5 @@
 from flask import Blueprint, current_app, jsonify, request
-from flask_jwt_extended import create_access_token, jwt_required
+from flask_jwt_extended import create_access_token
 from utils.index import decrypt
 
 import json

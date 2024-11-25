@@ -12,6 +12,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { Checkbox } from "../ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 export default function DescriptionForm({
   form,
@@ -81,7 +82,7 @@ export default function DescriptionForm({
               </FormLabel>
               <FormControl>
                 <div className="flex gap-2 items-center">
-                  <Input type="number" placeholder="79" {...field} />
+                  <Input type="number" min={0} placeholder="0000" {...field} />
                   <Button
                     className="italic font-bold text-xs"
                     variant="outline"
@@ -102,7 +103,15 @@ export default function DescriptionForm({
             <FormItem>
               <FormLabel>Contextura</FormLabel>
               <FormControl>
-                <Input placeholder="Delgado" {...field} />
+                <Select value={ field.value } onValueChange={(e) => field.onChange(e)}>
+                  <SelectTrigger>
+                    <SelectValue  placeholder={'contextura'} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="delgado">delgado</SelectItem>
+                    <SelectItem value="gordo">gordo</SelectItem>
+                  </SelectContent>
+                </Select>
               </FormControl>
               <FormMessage />
             </FormItem>

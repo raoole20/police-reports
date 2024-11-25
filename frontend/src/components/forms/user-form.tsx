@@ -11,6 +11,7 @@ import {
 import { Input } from "../ui/input";
 import { UseFormReturn } from "react-hook-form";
 import { ReportFormType } from "@/app/dashboard/report/new/components/Form";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 export function UserForm({ form }: { form: UseFormReturn<ReportFormType> }) {
   return (
@@ -71,7 +72,6 @@ export function UserForm({ form }: { form: UseFormReturn<ReportFormType> }) {
             <FormItem>
               <FormLabel>Fecha de Nacimiento</FormLabel>
               <FormControl>
-                {/* TODO: colocar un input date */}
                 <Input placeholder="2021-01-01" type="date" {...field} />
               </FormControl>
               <FormMessage />
@@ -86,8 +86,15 @@ export function UserForm({ form }: { form: UseFormReturn<ReportFormType> }) {
             <FormItem>
               <FormLabel>Sexo</FormLabel>
               <FormControl>
-                {/* cambiar por un select */}
-                <Input placeholder="Masculino" {...field} />
+                <Select onValueChange={(e) => field.onChange(e)}>
+                  <SelectTrigger>
+                    <SelectValue  placeholder={'Sexo'}/>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value='M'>Masculino</SelectItem>
+                    <SelectItem value='F'>Femenino</SelectItem>
+                  </SelectContent>
+                </Select>
               </FormControl>
               <FormDescription></FormDescription>
               <FormMessage />
@@ -102,8 +109,15 @@ export function UserForm({ form }: { form: UseFormReturn<ReportFormType> }) {
             <FormItem>
               <FormLabel>Estado Civil</FormLabel>
               <FormControl>
-                {/* cambiar por un select */}
-                <Input placeholder="Soltero" {...field} />
+                <Select onValueChange={(e) => field.onChange(e)}>
+                  <SelectTrigger>
+                    <SelectValue  placeholder={'Estado Civil'}/>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="soltero">soltero</SelectItem>
+                    <SelectItem value="casado">casado</SelectItem>
+                  </SelectContent>
+                </Select>
               </FormControl>
               <FormDescription></FormDescription>
               <FormMessage />
