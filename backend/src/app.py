@@ -1,6 +1,6 @@
 from flask import Flask
 from flask_jwt_extended import JWTManager
-from controller import reports_routes, user_routes
+from controller import delitos_routes, reports_routes, user_routes
 from config import config
 from controller import example_routes, cops_router, auth_routes
 from flask_mysqldb import MySQL
@@ -28,4 +28,5 @@ if __name__ == '__main__':
     app.register_blueprint(auth_routes.auth_routes, url_prefix='/api/auth', connection=conexion)
     app.register_blueprint(user_routes.user_routes, url_prefix='/api/ciudadanos', connection=conexion)
     app.register_blueprint(reports_routes.reports_router, url_prefix='/api/reports', connection=conexion)
+    app.register_blueprint(delitos_routes.delitos_routes, url_prefix='/api/delitos', connection=conexion)
     app.run()

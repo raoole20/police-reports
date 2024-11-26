@@ -6,11 +6,11 @@ import { AuthSession } from "@/types/type";
 
 const url = new URL(process.env.NEXT_API_URL || '')
 
-export async function createReports(data: ReportesData) {
+export async function createReports(data: ReportesData, cID: number | string) {
     const { user } = (await auth()) as unknown as AuthSession
-
+    console.log(user)
     try {
-        const response = await fetch(`${url.origin}/api/reportes`, {
+        const response = await fetch(`${url.origin}/api/reportes/${user.id}/${cID}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -20,6 +20,7 @@ export async function createReports(data: ReportesData) {
         })
 
         if (!response.ok) {
+            return
             throw new Error("Failed to create report")
         }
 

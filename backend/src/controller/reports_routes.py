@@ -1,3 +1,4 @@
+from datetime import datetime 
 import json
 from flask import Blueprint, current_app, jsonify, request
 from flask_jwt_extended import jwt_required
@@ -28,59 +29,66 @@ def getAll():
         {"message": "Lista reportes", "error": False, "data":json_data}
     )
 
-@reports_router.route("/", methods=["POST"])
-def createReports():
+
+#   descripcion:     string;
+#     fecha:           string;
+#     cargos:          string | number[];
+@reports_router.route("/<int:pID>/<int:cID>", methods=["POST"])
+def createReports(pID, cID):
     data = request.get_json()
     descripcion = data.get("descripcion")
-    policeID = data.get("id_policia")
-    status = data.get("estatus")
-    citizenID = data.get("ciudadanos_id")
-    addressID = data.get("direcciones_id1")    
+    fecha = data.get("fecha")
+    cargos = data.get("cargos")  # array 
+
+    # Validar que la fecha esté en el formato correcto
+    try:
+        datetime.strptime(fecha, '%Y-%m-%d')
+    except ValueError:
+        return jsonify({"error": True, "message": "Fecha no válida, debe estar en formato YYYY-MM-DD"}), 400
 
     query = """
-        INSERT INTO cops_sql.reportes (fecha, id_policia, descripcion, estatus) VALUES(CURRENT_DATE(), {}, '{}', '{}')
-    """.format(policeID, descripcion, status)
+        INSERT INTO cops_sql.reportes
+          (fecha, id_policia, descripcion, ciudadanos_id)
+            VALUES('{}', {}, '{}', {})
+    """.format(fecha, pID, descripcion, cID)
 
-    print(query)
+
+    print(cargos)
+
     try:
         conexion = current_app.config["MYSQL_CONNECTION"]
         cursor = conexion.connection.cursor()
         try:
             cursor.execute(query)
-            cursor.connection.commit()
+            conexion.connection.commit()
 
+            query = """ 
+                SELECT LAST_INSERT_ID() as id
+            """
+            cursor.execute(query)
+            report_id = cursor.fetchone()[0]
+            print(report_id)
+            for cargos in cargos:
+                try:
+                    query = """
+                        INSERT INTO cargos
+                        (reportes_id, delitos_id)
+                        VALUES({}, {})
+                    """.format(report_id,cargos)
+
+                    cursor.execute(query)
+                    conexion.connection.commit()
+                except Exception as e:
+                    print(e)
+                    return jsonify({"error": True, "message": "error al crear un cargo", data: e.__str__()}), 400
+               
             return jsonify({"error": False, "message": "Datos guardados correctamente", 'data': None}), 201
         except Exception as e:
             print(e)
-            if(e.args[0] == 1452):
-                return jsonify({"error": True, "message": "El id del policia no existe",}), 400
+            if e.args[0] == 1452:
+                return jsonify({"error": True, "message": "El id del policia no existe"}), 400
             
-            return jsonify({"error": True, "message": "Error al guardar los datos", "data": e.__str__()}), 500
+            return jsonify({"error": True, "message": "Error al guardar los datos", "data": str(e)}), 500
     except Exception as e:
         print(e)
-        return jsonify({"error": True, "message": "Internl server error"}), 500
-
-
-@reports_router.route("/<int:report_id>", methods=["PUT"])
-def updateReport(report_id):
-    data = request.get_json()
-    status = data.get("estatus")
-
-    query = """
-        UPDATE cops_sql.reportes SET estatus = '{}' WHERE id = {}
-    """.format(status, report_id)
-
-    try:
-        conexion = current_app.config["MYSQL_CONNECTION"]
-        cursor = conexion.connection.cursor()
-        try:
-            cursor.execute(query)
-            cursor.connection.commit()
-
-            return jsonify({"error": False, "message": "Datos actualizados correctamente", 'data': None}), 201
-        except Exception as e:
-            print(e)
-            return jsonify({"error": True, "message": "Error al actualizar los datos", "data": e.__str__()}), 500
-    except Exception as e:
-        print(e)
-        return jsonify({"error": True, "message": "Internl server error"}), 500
+        return jsonify({"error": True, "message": "Internal server error"}), 500
