@@ -83,11 +83,11 @@ export async function getReports() {
     }
 }
 
-export async function updateReports(estatus: 'IMPUTADO' | 'INOCENTE' | 'CULPABLE') {
+export async function updateReports(estatus: 'IMPUTADO' | 'INOCENTE' | 'CULPABLE', id: string | number) {
     const { user } = (await auth()) as unknown as AuthSession
 
     try {
-        const response = await fetch(`${url.origin}/api/reports`, {
+        const response = await fetch(`${url.origin}/api/reports/${id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",

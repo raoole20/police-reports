@@ -28,7 +28,6 @@ def getAll():
     return jsonify(
         {"message": "Lista Delitos", "error": False, "data":json_data}
     )
-
 @delitos_routes.route("/", methods=["POST"])
 @jwt_required()
 def createDelitos():
@@ -57,3 +56,33 @@ def createDelitos():
             return jsonify({"error": True, "message": "Error al guardar los datos", "data": e.__str__()}), 500
     except Exception as e:
         print(e)
+
+
+@delitos_routes.route("/", methods=["PUT"])
+@jwt_required()
+def actualizar():
+    data = request.get_json()
+    nombre = data.get("nombre")
+    descripcion = data.get("descripcion")
+    
+    query = """
+        INSERT INTO cops_sql.delitos (nombre, descripcion) VALUES('{}', '{}')
+    """.format(nombre, descripcion)
+
+    print(query)
+    try:
+        conexion = current_app.config["MYSQL_CONNECTION"]
+        cursor = conexion.connection.cursor()
+        try:
+            cursor.execute(query)
+            cursor.connection.commit()
+
+            return jsonify({"error": False, "message": "Datos guardados correctamente", 'data': None}), 201
+        except Exception as e:
+            print(e)
+            if(e.args[0] == 1452):
+                return jsonify({"error": True, "message": "El id del policia no existe",}), 400
+            
+            return jsonify({"error": True, "message": "Error al guardar los datos", "data": e.__str__()}), 500
+    except Exception as e:
+        print(e)       

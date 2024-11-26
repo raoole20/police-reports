@@ -20,7 +20,7 @@ def login():
                     p.id,
                     p.rango
                 FROM policias p 
-                    WHERE p.id_policia = '{}'""".format(policia_id)
+                    WHERE p.cedula = '{}'""".format(policia_id)
 
     conexion = current_app.config["MYSQL_CONNECTION"]
     cursor = conexion.connection.cursor()

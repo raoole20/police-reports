@@ -28,11 +28,6 @@ const items = [
     title: "Policias",
     url: "/dashboard/cops/",
     icon: Siren,
-  },
-  {
-    title: "Personas",
-    url: "/dashboard/personas",
-    icon: UserRound,
   }
 ];
 

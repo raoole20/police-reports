@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -12,11 +12,11 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
-import { MoreHorizontal, Printer } from "lucide-react"
+} from "@tanstack/react-table";
+import { MoreHorizontal, Printer } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -24,8 +24,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -33,9 +33,11 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Person } from "@/types/persons.types"
-
+} from "@/components/ui/table";
+import { Person } from "@/types/persons.types";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { updateReports } from "@/service/reports-service";
+import { toast } from "react-toastify";
 
 export const columns: ColumnDef<Person>[] = [
   {
@@ -88,40 +90,46 @@ export const columns: ColumnDef<Person>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original
-
+      console.log(row, 'row')
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Abrir menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.cedula)}
-            >
-              Copiar ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Ver</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )
+        <Select onValueChange={(value) => {
+          console.log('123123')
+          updateReports(value as any, row.original.reporte_id)
+            .then((res) => {
+              console.log(res)
+              if(res.error)
+                throw new Error(res.message || 'error')
+
+              toast.success('actualizado')
+            })
+            .catch((err) => {
+              console.log(err)
+              toast.error(err.message || 'error')
+            })
+        }} defaultValue={row.original.estatus}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="" />
+          </SelectTrigger>
+          <SelectContent>
+          {/* ('IMPUTADO','CULPABLE','INOCENTE') */}
+            <SelectItem value="IMPUTADO">IMPUTADO</SelectItem>
+            <SelectItem value="INOCENTE">INOCENTE</SelectItem>
+            <SelectItem value="CULPABLE">CULPABLE</SelectItem>
+          </SelectContent>
+        </Select>
+      );
     },
   },
-]
+];
 
 export function ImputadosTable({ data }: { data: Person[] }) {
-  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
-  )
+  );
   const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
+    React.useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
     data,
@@ -140,7 +148,7 @@ export function ImputadosTable({ data }: { data: Person[] }) {
       columnVisibility,
       rowSelection,
     },
-  })
+  });
 
   return (
     <div className="w-full">
@@ -153,14 +161,7 @@ export function ImputadosTable({ data }: { data: Person[] }) {
           }
           className="max-w-sm"
         />
-        <div className="gap-2 flex items-center">
-          <Button variant={'outline'} size={'icon'}>
-            <Printer/>
-          </Button>
-          <Button variant={'outline'} className="bg-primary">
-            Crear Imputados
-          </Button>
-        </div>
+        <div className="gap-2 flex items-center"></div>
       </div>
       <div className="rounded-md border">
         <Table>
@@ -177,7 +178,7 @@ export function ImputadosTable({ data }: { data: Person[] }) {
                             header.getContext()
                           )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -237,5 +238,5 @@ export function ImputadosTable({ data }: { data: Person[] }) {
         </div>
       </div>
     </div>
-  )
+  );
 }
