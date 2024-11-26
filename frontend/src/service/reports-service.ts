@@ -8,9 +8,8 @@ const url = new URL(process.env.NEXT_API_URL || '')
 
 export async function createReports(data: ReportesData, cID: number | string) {
     const { user } = (await auth()) as unknown as AuthSession
-    console.log(user)
     try {
-        const response = await fetch(`${url.origin}/api/reportes/${user.id}/${cID}`, {
+        const response = await fetch(`${url.origin}/api/reports/${user.id}/${cID}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -20,7 +19,6 @@ export async function createReports(data: ReportesData, cID: number | string) {
         })
 
         if (!response.ok) {
-            return
             throw new Error("Failed to create report")
         }
 
@@ -51,7 +49,7 @@ export async function getReports() {
     const { user } = (await auth()) as unknown as AuthSession
 
     try {
-        const response = await fetch(`${url.origin}/api/reportes`, {
+        const response = await fetch(`${url.origin}/api/reports`, {
             method: "GET",
             headers: {
                 Authorization: `Bearer ${user.accessToken}`,
@@ -89,7 +87,7 @@ export async function updateReports(estatus: 'IMPUTADO' | 'INOCENTE' | 'CULPABLE
     const { user } = (await auth()) as unknown as AuthSession
 
     try {
-        const response = await fetch(`${url.origin}/api/reportes`, {
+        const response = await fetch(`${url.origin}/api/reports`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -118,6 +116,42 @@ export async function updateReports(estatus: 'IMPUTADO' | 'INOCENTE' | 'CULPABLE
         return {
             error: true,
             message: 'Error al actualizar el reporte',
+            data: null
+        }
+    }
+}
+
+// export async function getReportsByCID(cID: number | string) {}
+export async function getPendingCase() {
+    const { user } = (await auth()) as unknown as AuthSession
+
+    try {
+        const response = await fetch(`${url.origin}/api/reports/pending`, {
+            headers: {
+                Authorization: `Bearer ${user.accessToken}`
+            }
+        })
+
+        if (!response.ok) {
+            throw new Error("Failed to get pending case")
+        }
+
+        const clone = response.clone()
+        try {
+            const resJson = await response.json()
+            return resJson as { error: boolean, message: string, data: number }
+        } catch (error) {
+            console.log(error)
+            return {
+                error: true,
+                data: null,
+                message: await clone.text() || "Failed to get pending case"
+            }
+        }
+    } catch (error) {
+        return {
+            error: true,
+            message: 'Error al obtener el caso pendiente',
             data: null
         }
     }

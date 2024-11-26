@@ -17,6 +17,7 @@ def login():
                     p.contrasena,
                     p.nombre,
                     p.apellido,
+                    p.id,
                     p.rango
                 FROM policias p 
                     WHERE p.id_policia = '{}'""".format(policia_id)
@@ -35,7 +36,7 @@ def login():
         decryptPass = decryptPass.decode()
         
         if contrasena == decryptPass:
-            id = police[0]
+            id = police[-2]
             nombre = police[2]
             apellido = police[3]
             rango = police[-1]

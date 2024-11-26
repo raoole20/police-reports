@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import React from "react";
 
-export default function ShortCoutsCard() {
+export default function ShortCoutsCard({ padingCases }: { padingCases: number }) {
   return (
     <Card>
       <CardHeader>
@@ -19,11 +19,9 @@ export default function ShortCoutsCard() {
         <div className="flex justify-between gap-5">
           <div>
             <p className="text-gray-500">Total</p>
-            <p className="text-6xl font-semibold">10</p>
+            <p className="text-6xl font-semibold">{padingCases || 0}</p>
           </div>
           <div>
-            <p className="text-gray-500">Hoy</p>
-            <p className="text-6xl font-semibold">1</p>
           </div>
         </div>
       </CardContent>

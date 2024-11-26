@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 import { createReports } from "@/service/reports-service";
 import { Button } from "../ui/button";
 import { useResenaContext } from "../providers/ResenaProvider";
+import { useRouter } from "next/navigation";
 
 export interface ReportForm {
   fecha: string;
@@ -37,7 +38,8 @@ const reportFormSchema = z.object({
 });
 
 export default function ReportForm() {
-    const { cuidadano } = useResenaContext()
+  const { cuidadano } = useResenaContext();
+  const router = useRouter();
   const [selectedFrameworks, setSelectedFrameworks] = useState<string[]>([]);
   const [delitos, setDelitos] = useState<[]>([]);
 
@@ -79,11 +81,11 @@ export default function ReportForm() {
     fetchDelitos();
   }, []);
 
-//   console.log(fields);
+  //   console.log(fields);
 
   const onSubmit = (event: ReportForm) => {
-    if(!cuidadano?.id){
-        return toast.error("No se ha seleccionado un ciudadano");
+    if (!cuidadano?.id) {
+      return toast.error("No se ha seleccionado un ciudadano");
     }
     createReports(event, cuidadano.id)
       .then((res) => {
@@ -91,6 +93,7 @@ export default function ReportForm() {
           throw new Error(res.message);
         }
         toast.success("Reporte creado");
+        router.push("/dashboard");
       })
       .catch((error) => {
         console.error(error);
@@ -140,22 +143,22 @@ export default function ReportForm() {
               control={form.control}
               render={({ field }) => {
                 return (
-                    <FormItem>
-                        <MultiSelect
-                          options={delitos}
-                          onValueChange={(event) => {
-                            setSelectedFrameworks(event);
-                            field.onChange(event);
-                          }}
-                          defaultValue={selectedFrameworks}
-                          placeholder="Seleccionar delito"
-                          variant="inverted"
-                          animation={2}
-                          maxCount={3}
-                          value={field.value as any}
-                        />
-                        <FormMessage />
-                    </FormItem>
+                  <FormItem>
+                    <MultiSelect
+                      options={delitos}
+                      onValueChange={(event) => {
+                        setSelectedFrameworks(event);
+                        field.onChange(event);
+                      }}
+                      defaultValue={selectedFrameworks}
+                      placeholder="Seleccionar delito"
+                      variant="inverted"
+                      animation={2}
+                      maxCount={3}
+                      value={field.value as any}
+                    />
+                    <FormMessage />
+                  </FormItem>
                 );
               }}
             />

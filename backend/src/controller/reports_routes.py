@@ -11,22 +11,46 @@ reports_router = Blueprint("reports_router", __name__)
 # @jwt_required()
 def getAll():
     query = """
-        SELECT id, fecha, id_policia, descripcion, estatus, ciudadanos_id, direcciones_id1 FROM cops_sql.reportes
+       SELECT 
+            r.id AS reporte_id,
+            r.fecha,
+            r.descripcion,
+            r.estatus,
+            c.id AS ciudadano_id,
+            c.nombre,
+            c.apellido,
+            c.cedula,
+            c.sexo,
+            c.estado_civil,
+            c.fecha_nacimiento,
+            p.id AS policia_id,
+            p.nombre AS policia_nombre,
+            p.apellido AS policia_apellido
+        FROM 
+            cops_sql.reportes r
+        JOIN 
+            ciudadanos c ON c.id = r.ciudadanos_id
+        JOIN 
+            policias p ON p.id = r.id_policia;
     """
 
     conexion = current_app.config["MYSQL_CONNECTION"]
     cursor = conexion.connection.cursor()
     cursor.execute(query)
     cops = cursor.fetchall()
+    columnas = [
+        "reporte_id", "fecha", "descripcion", "estatus", 
+        "ciudadano_id", "nombre", "apellido", "cedula", 
+        "sexo", "estado_civil", "fecha_nacimiento", 
+        "policia_id", "policia_nombre", "policia_apellido"
+    ]
 
-    columnas = ["id", "fecha", "id_policia", "descripcion", "estatus", "ciudadanos_id", "direcciones_id1"]
 
     # Convertir cada tupla en un diccionario
     datos = [dict(zip(columnas, tupla)) for tupla in cops]
-    json_data = json.dumps(datos, ensure_ascii=False, indent=4)
 
     return jsonify(
-        {"message": "Lista reportes", "error": False, "data":json_data}
+        {"message": "Lista reportes", "error": False, "data":datos}
     )
 
 
@@ -92,3 +116,19 @@ def createReports(pID, cID):
     except Exception as e:
         print(e)
         return jsonify({"error": True, "message": "Internal server error"}), 500
+    
+
+@reports_router.route("/pending", methods=["GET"])
+def getCasoPendientes():
+    query = """
+    SELECT count(*) FROM reportes WHERE estatus = 'IMPUTADO'
+    """
+
+    conexion = current_app.config["MYSQL_CONNECTION"]
+    cursor = conexion.connection.cursor()
+    cursor.execute(query)
+
+    cops = cursor.fetchone()[0]
+
+    return jsonify({"message": "Casos pendientes", "error": False, "data": cops})
+
