@@ -2,9 +2,12 @@ blinker==1.9.0
 click==8.1.7
 colorama==0.4.6
 Flask==3.0.3
+Flask-JWT-Extended==4.7.1
 Flask-MySQLdb==2.0.0
 itsdangerous==2.2.0
 Jinja2==3.1.4
 MarkupSafe==3.0.2
 mysqlclient==2.2.5
+pycryptodome==3.21.0
+PyJWT==2.10.0
 Werkzeug==3.1.3
