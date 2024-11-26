@@ -61,6 +61,7 @@ export function UserForm({}: UserFormProps) {
   const [formState, setFormState] = React.useState({
     isNoneEdit: false,
     isCreated: false,
+    editCurrentUser: false,
   });
 
   const form = useForm<BasicUserData>({
@@ -76,12 +77,23 @@ export function UserForm({}: UserFormProps) {
         if (res.error) throw new Error(res.message);
 
         toast.success("Ciudadano creado correctamente");
-        setFormState(() => ({ isNoneEdit: true, isCreated: true }));
+        setFormState(() => ({
+          isNoneEdit: true,
+          isCreated: true,
+          editCurrentUser: false,
+        }));
         setCuidadano(res.data!);
       })
       .catch((err) => {
         console.error(err);
         toast.error(err?.message || "Error al crear el ciudadano");
+        setFormState(() => {
+          return {
+            isNoneEdit: false,
+            isCreated: false,
+            editCurrentUser: false
+          }
+        })
       });
   };
 
@@ -111,11 +123,14 @@ export function UserForm({}: UserFormProps) {
         .catch((err) => {
           console.error(err);
           toast.info(err?.message || "Error al buscar el ciudadano");
-          form.resetField("nombre");
-          form.resetField("apellido");
-          form.resetField("sexo");
-          form.resetField("estado_civil");
-          form.resetField("fecha_nacimiento");
+          form.reset({
+            cedula: form.getValues("cedula"),
+          });
+          form.setValue("cedula", form.getValues("cedula"), {
+            shouldDirty: true,
+            shouldValidate: true,
+            shouldTouch: true,
+          });
           setCuidadano(null);
           setFormState((last) => ({ ...last, isNoneEdit: false }));
         });
@@ -276,15 +291,41 @@ export function UserForm({}: UserFormProps) {
           />
         </div>
 
-        <Button
-          type="submit"
-          disabled={
-            isSubmitting || !form.formState.isValid || formState.isNoneEdit
-          }
-        >
-          {isSubmitting && <Loader2Icon className="animate-spin" />}
-          Crear cuidadano
-        </Button>
+        <div className="flex gap-2 items-center justify-center">
+          <Button
+            type="submit"
+            disabled={
+              isSubmitting || !form.formState.isValid || formState.isNoneEdit
+            }
+          >
+            {isSubmitting && <Loader2Icon className="animate-spin" />}
+            Crear cuidadano
+          </Button>
+
+          <Button
+            type="button"
+            variant={"outline"}
+            disabled={!formState.isNoneEdit}
+            onClick={() => {
+              console.log(form.getValues("cedula"));
+              form.reset({
+                cedula: form.getValues("cedula"),
+              });
+              form.setValue("cedula", form.getValues("cedula"), {
+                shouldDirty: true,
+                shouldValidate: true,
+                shouldTouch: true,
+              });
+              setFormState(() => ({
+                isNoneEdit: false,
+                isCreated: false,
+                editCurrentUser: false,
+              }));
+            }}
+          >
+            Limpiar formulario
+          </Button>
+        </div>
       </form>
     </Form>
   );
