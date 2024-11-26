@@ -14,13 +14,21 @@ import { Separator } from "@/components/ui/separator";
 import { CirclePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export interface ReportFormType {
   nombre: string;
   apellido: string;
   cedula: number;
   sexo: "M" | "F";
-  estado_civil: "soltero" | "casado" | "divorciado" | "viudo";
+  estado_civil: "SOLTERO" | "CASADO" | "DIVORCIADO" | "VIUDO";
   fecha_nacimiento: string;
   color_cabello: string;
   color_ojos: string;
@@ -35,31 +43,35 @@ export interface ReportFormType {
 }
 
 export default function ReportFormPage() {
-  const form = useForm<ReportFormType>({
-    defaultValues: {},
-  });
-
-  const onSubmit = async (data: ReportFormType) => {
-    console.log(data);
-  };
-
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <Accordion type="multiple" className="space-y-5">
-          <AccordionItem
-            value="item-1"
-            className="p-4 border rounded-lg space-y-8"
-            defaultChecked
-          >
-            <AccordionTrigger className="hover:no-underline">
-              Datos Basicos del Ciudadano
-            </AccordionTrigger>
-            <AccordionContent>
-              <UserForm form={form} />
-            </AccordionContent>
-          </AccordionItem>
+    <div className="space-y-5">
+      <Card className="">
+        <CardHeader className="hover:no-underline">
+          <CardTitle>Datos Basicos del Ciudadano</CardTitle>
+          <CardDescription>
+            Ingrese los datos basicos del ciudadano, puede buscar un cuidadano
+            ya existente usando el campo de cedula
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <UserForm />
+        </CardContent>
+        <CardFooter></CardFooter>
+      </Card>
 
+      <Card>
+        <CardHeader className="hover:no-underline">
+          <CardTitle>Descripcion del Ciudadano</CardTitle>
+          <CardDescription>
+            Ingrese los datos fisicos del ciudadano
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <DescriptionForm />
+        </CardContent>
+        <CardFooter></CardFooter>
+      </Card>
+      {/* 
           <AccordionItem
             value="descripcion"
             className="p-4 border rounded-lg space-y-8"
@@ -98,9 +110,7 @@ export default function ReportFormPage() {
                 </Button>
               </div>
             </AccordionContent>
-          </AccordionItem>
-        </Accordion>
-      </form>
-    </Form>
+          </AccordionItem> */}
+    </div>
   );
 }

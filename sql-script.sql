@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `cops_sql`.`descripcion_fisica` (
   `descripcion_fisicacol2` VARCHAR(45) NOT NULL,
   `descripcion_fisicacol3` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`))
-ENGINE = InnoDB;
+ENGINE = InnoDB; -- colocar foreign key a ciudadanos
 
 -- -----------------------------------------------------
 -- Table `cops_sql`.`ciudadanos`
@@ -62,8 +62,7 @@ CREATE TABLE IF NOT EXISTS `cops_sql`.`ciudadanos` (
   `cedula` INT NOT NULL,
   `sexo` ENUM('M', 'F') NOT NULL,
   `estado_civil` ENUM('SOLTERO', 'CASADO', 'DIVORCIADO', 'VIUDO') NOT NULL,
-  `fecha_nacimiento` DATE NOT NULL,
-  `descripcion_fisica_id` INT NOT NULL,
+  `fecha_nacimiento` DATE NOT NULL
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_ciudadanos_descripcion_fisica1`
     FOREIGN KEY (`descripcion_fisica_id`)
