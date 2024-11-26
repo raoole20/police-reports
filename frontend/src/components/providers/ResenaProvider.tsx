@@ -3,7 +3,7 @@ import { BasicCiudadanoData } from '@/types/cuidadanos';
 import React, { createContext, useState, ReactNode, useContext } from 'react';
 
 interface ResenaContextProps {
-   cuidadano: BasicCiudadanoData | null;
+   cuidadano: (BasicCiudadanoData & { id?: number | string }) | null;
    setCuidadano: (cuidadano: BasicCiudadanoData | null) => void;
 }
 
@@ -18,7 +18,7 @@ interface ResenaProviderProps {
 }
 
 export const ResenaProvider: React.FC<ResenaProviderProps> = ({ children }) => {
-    const [cuidadano, setCuidadano] = useState<BasicCiudadanoData | null>(null);
+    const [cuidadano, setCuidadano] = useState<(BasicCiudadanoData & { id?: number | string }) | null>(null);
 
     return (
         <ResenaContext.Provider value={{ 

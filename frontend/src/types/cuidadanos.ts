@@ -12,10 +12,10 @@ export interface CiudadanoDescriptionData {
   color_ojos: string;
   estatura: number;
   peso: number;
-  descripcion: string;
-  direccion: string;
-  tatuajes: string;
+  rasgos_faciales: string;
+  tipo_cabello: string;
+  complexion: string;
   cicatrices: boolean;
-  contextura: string;
-  lentes: string;
+  tatuajes: boolean;
+  lentes: boolean;
 }
